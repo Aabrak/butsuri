@@ -1,0 +1,78 @@
+body  {
+  background-image: url("../img/bg2.png");
+  background-color: #444;
+  overflow: hidden; /**/
+}
+
+#c {
+    /* background-color: rgba(200, 0, 200, 0.2); */
+
+   	padding-left: 0;
+    padding-right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    
+    margin-top: 10%;
+
+    display: block;
+
+    border: 1px solid cyan;
+}
+* {
+    margin: 0; padding: 0;
+}
+
+body, html { height:100%; }
+
+input ,label{
+	bottom: 703px;
+	top: -598px;
+	left: 10px;
+	position: relative;
+	font-family: verdana;
+}
+
+label {
+	color: lightgrey;
+}
+
+
+.check {
+
+  -webkit-appearance: none;
+  background-color: #555;
+  padding: 10px;
+  border-radius: 3px;
+  display: inline-block;
+  position: relative;
+
+}
+
+.check:checked {
+
+  background-color: #95F;
+
+}
+
+.button {
+
+  background-color: #555; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+
+}
+
+.button:hover {
+  background-color: #95F;
+}
+
+/* No out line on button and checkbox */
+.check:focus, .button:focus {
+  outline: 0;
+}
+
