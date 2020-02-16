@@ -8,31 +8,49 @@
     </head>
     <body>
 
+        <div id="mainUI">
+        
+            <input type="button" name="refreshBtn" value="RESET" id="bRefresh" class="button">
+
+            <input type="button" name="removeBtn" value="REMOVE ONE" id="bRemove" class="button">
+
+            <input type="button" name="addBtn" value="ADD ONE" id="bAdd" class="button">
+
+            <input type="range" name="amountSlider" value="ADD" id="sAmount" min="1" max="100">
+            <input type="button" name="addAmountBtn" value="ADD AMOUNT" id="bAddAmount" class="button">
+
+            <input type="button" name="removeAllBtn" value="REMOVE ALL" id="bRemoveAll" class="button">
+
+            <input type="button" name="increaseSpeedBtn" value="INCREASE SPEED" id="bIncSpeed" class="button"><br><br>
+
+            <input type="color" id="colorPick" name="colorPick" value="#00CCFF">
+            <label>COLOR</label><br><br>
+
+            <input type="checkbox" name="gravityBtn" id="bGravity" class="check">
+            <label>GRAVITY (will still apply with freeze)</label><br>
+
+            <input type="checkbox" name="forceBtn" id="bForce" class="check">
+            <label>FREEZE</label><br>
+
+            <input type="checkbox" name="boundingBoxBtn" id="bBoundingBox" class="check">
+            <label>BOUNDING BOX</label><br>
+
+            <input type="checkbox" name="bounceBtn" id="bBounce" class="check">
+            <label>STICK TO FLOOR</label><br>
+
+            <input type="checkbox" name="trailBtn" id="bTrail" class="check">
+            <label>LEAVE TRAIL</label><br>
+
+            <input type="checkbox" name="vortexBtn" id="bVortex" class="check">
+            <label>ENABLE VORTEX (click position)</label><br>
+
+            <input type="checkbox" name="explosionBtn" id="bSplode" class="check">
+            <label>EXPLOSION ON CLICK</label>
+
+        </div>
+
         <canvas id="c"></canvas>
         <!-- <img id="imug" src="img/ball.png"> -->
-
-        <input type="button" name="refreshBtn" value="RESET" id="bRefresh" class="button">
-
-        <input type="button" name="removeBtn" value="REMOVE ONE" id="bRemove" class="button">
-
-        <input type="button" name="addBtn" value="ADD ONE" id="bAdd" class="button">
-
-        <input type="button" name="removeAllBtn" value="REMOVE ALL" id="bRemoveAll" class="button"><br><br>
-        
-        <input type="checkbox" name="gravityBtn" id="bGravity" class="check">
-        <label>GRAVITY (will still apply with freeze)</label><br>
-
-        <input type="checkbox" name="forceBtn" id="bForce" class="check">
-        <label>FREEZE</label><br>
-
-        <input type="checkbox" name="boundingBoxBtn" id="bBoundingBox" class="check">
-        <label>BOUNDING BOX</label><br>
-
-        <input type="checkbox" name="bounceBtn" id="bBounce" class="check">
-        <label>STICK TO FLOOR</label><br>
-
-        <input type="checkbox" name="trailBtn" id="bTrail" class="check">
-        <label>LEAVE TRAIL</label><br>
 
         <!--<input type="range" min="1" max="100" value="5" id="sSize">-->
         

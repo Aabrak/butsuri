@@ -14,6 +14,8 @@ const centerX = window.innerWidth / 2;
 const centerY = window.innerHeight / 2;
 var mouX;
 var mouY;
+var clickPositionX;
+var clickPositionY;
 var bHeight = 60;
 var counter = 0;
 var clickSwitch = 0;
@@ -66,12 +68,12 @@ let crosa = {
 
 class pix {
 	
-	constructor(x, y, size, speed, color, mass) {
+	constructor(x, y, size, speedX, speedY, color, mass) {
 		this.x = x;
 		this.y = y;
 		this.size = size;
-		this.speedY = speed;
-		this.speedX = speed; //Need to change this later
+		this.speedY = speedY;
+		this.speedX = speedX; //Need to change this later
 		this.mass = size/100;
 		this.color = color;
 		this.axis = Math.floor(Math.random() * (4 - 1) + 1);
@@ -110,7 +112,7 @@ class pix {
 	gravityWithForce() {
 		this.y += this.mass*3;
 
-		this.speedY += 0.1;
+		this.speedY += 0.1
 		//this.x -= this.speedY;
 		//this.speedX -= 0.5;
 	}
@@ -139,9 +141,22 @@ class pix {
 		//console.log(this.speedY);
 	}
 
+	increaseSpeed() {
+		this.speedX = this.speedX * 2;
+		this.speedY = this.speedY * 2;
+	}
+
 	stick() {
 		if (this.y + this.size > can.height || this.y < 0) {
-			this.speedY = -this.speedY; //Divide this for less bounce, remove it if gravity isn't used
+			if (checkGravity()) {
+				this.speedY = -this.speedY/1.5; // ----------------- Divide this for less bounce, remove it if gravity isn't used
+			}
+			else this.speedY = -this.speedY;
+			
+			// This if statement throws particles back up in random directions if they're unmoving on the ground when removing gravity
+			if (!checkGravity() && this.speedX < 0.5 && this.speedX > -0.5 && this.speedY < 0.5 && this.speedY > -0.5) {
+				this.randomThrow();
+			}
 			//newSound.play();
 			//this.y -= this.size;
 			//console.log(this.speedY);
@@ -169,6 +184,9 @@ class pix {
 	outOfBounds() {
 		if (this.y + this.size > can.height) {
 			this.y = can.height - this.size + 0.1;
+			if (checkGravity()) {
+				this.speedX = this.speedX/1.05;
+			}
 			//console.log("fuck");
 		}
 		
@@ -217,6 +235,49 @@ class pix {
 		}
 	}
 
+	randomThrow() {
+		let angle = randomRange(1, 8);
+		switch (angle) {
+			
+			case 1:
+				this.speedY -= angle;
+			break;
+
+			case 2:
+				this.speedY -= angle;
+				this.speedX += angle;
+			break;
+
+			case 3:
+				this.speedX += angle;
+			break;
+
+			case 4:
+				this.speedY += angle;
+				this.speedX += angle;
+			break;
+
+			case 5:
+				this.speedY += angle;
+			break;
+
+			case 6:
+				this.speedY += angle;
+				this.speedX -= angle;
+			break;
+
+			case 7:
+				this.speedX -= angle;
+			break;
+
+			case 8:
+				this.speedX -= angle;
+				this.speedY -= angle;
+			break;
+			
+		}
+	}
+
 	getXnY() {
 		console.log(`x:\t${this.x}\ny:\t${this.y}`);
 	}
@@ -248,18 +309,30 @@ class pix {
 
 	vortex() {
 
-		if (this.x < mouX) {
-			this.x += 20;
+		let strength = 0;
+
+		if (this.x < clickPositionX) {
+			let smallDX = clickPositionX - this.x;
+			this.speedX += strength + smallDX/150;
+			this.x += 5;
 		}
-		else {
-			this.x -= 20;
+
+		else if (this.x > clickPositionX) {
+			let bigDX = this.x - clickPositionX;
+			this.speedX -= strength + bigDX/150;
+			this.x -= 5;
 		}
-		
-		if (this.y < mouY) {
-			this.y += 20;
+
+		if (this.y < clickPositionY) {
+			let smallDY = clickPositionY - this.y;
+			this.speedY += strength + smallDY/100;
+			this.y += 4;
 		}
-		else {
-			this.y -= 20;
+
+		else if (this.y > clickPositionY) {
+			let bigDY = this.y - clickPositionY
+			this.speedY -= strength + bigDY/100;
+			this.y -= 4;
 		}
 
 	}
@@ -307,7 +380,7 @@ function resizeCanv() {
 	var height = can.height = 500;// window.innerHeight/1.5;
 }
 
-resizeCanv();
+fullResizeWindow();
 
 console.log(`\nscreen width:\t${window.innerWidth}\nscreen height:\t ${window.innerHeight}`);
 
@@ -316,7 +389,7 @@ function mousePositions() {
 	console.log(`mouX:\t${mouX}\nmouY:\t${mouY}\nsped:\t${dy}`);
 }
 
-
+// Clean canvas
 function clearCanv() {
 	ctx.clearRect(0, 0, can.width, can.height);
 }
@@ -345,30 +418,36 @@ function colorGen() {
 	return rgb;
 }
 
-function selfCollider(num) {
+// ------------------------------------------- FIX THIS TO USE
+function selfCollider() {
 
 	let arrayLength = pixs.length;
 
 	for (let i = 0; i < arrayLength; i++) {
 
-		let secondNum = i + 1;
-		let firstPix = pixs[i];
-		let secondPix = pixs[i];
+		for (let j = 0; i < arrayLength; j++) {
 
-		//console.log(pixs.indexOf(i));
+			//		UP		RIGHT		DOWN		LEFT
+			if ( pixs[i].x == pixs[j].x && pixs[i].x == pixs[j].y ) {
+				pixs[i].reverseSpeeds();
+				pixs[j].reverseSpeeds();
+			}
 
-		let firstX = firstPix.getX();
-		let firstY = firstPix.getY();
-		let firstSize = firstPix.getSize();
 
-		let secondX = secondPix.getX();
-		let secondY = secondPix.getY();
-
-		if ( firstX + firstSize < secondX || firstY + firstSize < secondY ) {
-			//console.log("I'm colliding with my peeps");
 		}
+
 	}
 	
+}
+
+function increaseGlobalSpeed() {
+	// ADD THE FOR LOOP FOR THE ENTIRE ARRAY OF PARTICLES AND THEN ADD THE METHOD INCREASE GLOBAL SPEED ALSO PROBABLY RENAME THIS ONE
+	
+	let arrayLength = pixs.length;
+
+	for (let i = 0; i < arrayLength; i++) {
+		pixs[i].increaseSpeed();
+	}
 
 }
 
@@ -421,7 +500,15 @@ function createPix() {
 			pixs[i].mouseBound();
 		}
 
-		selfCollider(i);
+		if (!checkVortex()) {
+			pixs[i].vortex();
+		}
+
+		
+
+		// FIX TO USE
+		// selfCollider();
+		
 		//pixs[i].updateSize();
 
 		//pixs[i].selfCollison();
@@ -460,8 +547,21 @@ function randomRange(min, max) {
 	return Math.floor(Math.random() * (max - min + 1) + min)
 }
 
+//						x, y, size, speedX, speedY, color, mass					Global Pix Creation
 function globalPix() {
-	pixs.push(new pix(rAxis(), rYis(), randomRange(30, 40), randomRange(5, 7), colorGen(), 100));
+	let clr = document.getElementById("colorPick").value;
+	pixs.push(new pix(rAxis(), rYis(), randomRange(8, 10), randomRange(-10, 10), randomRange(-10, 10), clr, 100));
+}
+
+// Make explosion on click
+function splode() {
+	let clr = document.getElementById("colorPick").value;
+	let smallSize = 2;
+	let bigSize = 2.3;
+	for (let i = 0; i < 30; i++) {
+		pixs.push(new pix(clickPositionX, clickPositionY, randomRange(smallSize, bigSize), randomRange(-5, 5), randomRange(-5, 5), "#ffff00", 100));
+		pixs.push(new pix(clickPositionX, clickPositionY, randomRange(smallSize, bigSize), randomRange(-5, 5), randomRange(-5, 5), "#ffa500", 100));
+	}
 }
 
 function canvasPos() {
@@ -469,15 +569,10 @@ function canvasPos() {
 }
 
 
+
 ////
 ////	Miscellaneous
 ////
-
-
-let yeet = 0;
-
-/////////////////////EX:	5	3	 10	  3		 "#0CF" 5
-////////////////////////	X 	Y    SIZE SPEED  COLOR MASS
 
 var pixs = [];
 for (let i = 0; i < particleAmount; i++) {
@@ -496,10 +591,11 @@ function ripBrowser() {
 }
 
 
+
+
 ////
 ////	Event Listeners
 ////
-
 
 // Mousemove
 document.addEventListener("mousemove", e => {
@@ -514,8 +610,8 @@ document.addEventListener("mousemove", e => {
 	}
 	//globalPix();
 
-	crosa.croX = mouX - 210 - crosa.croSize/2;
-	crosa.croY = mouY - 125 - crosa.croSize/2;
+	crosa.croX = mouX + 380 - crosa.croSize/2;
+	crosa.croY = mouY + 80; // - 125 - crosa.croSize/2;
 	
 	// console.log(mouX);
 
@@ -526,6 +622,13 @@ document.addEventListener("mousemove", e => {
 // Click
 document.addEventListener("click", e => {
 	
+	clickPositionX = mouX + 390;
+	clickPositionY = mouY + 130;
+
+	if (!checkSplode()) {
+		splode();
+	}
+	console.log("shit");
 	//clearCanv();
 	//mouX = e.pageX;
 	//mouY = e.pageY;
@@ -545,6 +648,7 @@ document.addEventListener("click", e => {
 		clickSwitch = 0;
 	}
 	*/
+
 	let arrayLength = pixs.length;
 
 	for (let i = 0; i < arrayLength; i++) {
@@ -561,18 +665,8 @@ document.addEventListener("keydown", e => {
 
 	if (e.keyCode === 32) {
 		
-		window.location.reload(false); 
-		spaced = 1;
+		// window.location.reload(false); 
 
-		/* for (let i = 0; i < arrayLength; i++) {
-			//pixs[i].genAngle();
-
-		} */
-	}
-
-	else {
-		//clickSwitch = 0;
-		spaced = 0;
 	}
 
 });

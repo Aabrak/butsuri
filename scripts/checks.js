@@ -14,6 +14,24 @@ document.getElementById('bAdd').onclick = function() {
 	globalPix();
 };
 
+document.getElementById('bAddAmount').onclick = function() {
+	
+	let amountOfParticles = document.getElementById("sAmount").value;
+
+	parseInt(amountOfParticles);
+
+	console.log(amountOfParticles);
+
+	for (let i = 0; i < amountOfParticles; i++) {
+		globalPix();
+	}
+
+};
+
+document.getElementById('bIncSpeed').onclick = function() {
+	increaseGlobalSpeed();
+};
+
 document.getElementById('bRefresh').onclick = function() {
 
 	pixs = [];
@@ -61,6 +79,24 @@ function checkBounce() {
 
 function checkTrail() {
 	if (cTrail.checked) {
+		return false;
+	}
+	else {
+		return true;
+	}
+}
+
+function checkVortex() {
+	if (bVortex.checked) {
+		return false;
+	}
+	else {
+		return true;
+	}
+}
+
+function checkSplode() {
+	if (bSplode.checked) {
 		return false;
 	}
 	else {

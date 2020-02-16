@@ -4,19 +4,39 @@ body  {
   overflow: hidden; /**/
 }
 
-#c {
-    /* background-color: rgba(200, 0, 200, 0.2); */
+::selection {
+   color: none;
+   background: none;
+}
 
-   	padding-left: 0;
+* {
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+#c {
+    /* background-color: rgba(200, 0, 200, 0.1); /**/
+
+   	/* padding-left: 0;
     padding-right: 0;
     margin-left: auto;
     margin-right: auto;
     
-    margin-top: 10%;
+    margin-top: 100px;
 
     display: block;
 
-    border: 1px solid cyan;
+    border: 1px solid cyan; */
+
+    top: -274px;
+
+    position: relative;
+    z-index: 1;
+
+    /* background-color: brown */
 }
 * {
     margin: 0; padding: 0;
@@ -24,16 +44,32 @@ body  {
 
 body, html { height:100%; }
 
-input ,label{
+/* input ,label{
 	bottom: 703px;
 	top: -598px;
 	left: 10px;
 	position: relative;
 	font-family: verdana;
+} */
+
+#mainUI {
+  
+  left: 25px;
+  top: 25px;
+
+  font-family: verdana;
+  /* background-color: purple; /**/
+  
+  width: 1132px;
+
+  position: relative;
+  z-index: 2;
+
 }
 
 label {
-	color: lightgrey;
+  color: lightgrey;
+  text-shadow: 1px 1px #000000;
 }
 
 
@@ -42,7 +78,7 @@ label {
   -webkit-appearance: none;
   background-color: #555;
   padding: 10px;
-  border-radius: 3px;
+  border-radius: 2px;
   display: inline-block;
   position: relative;
 
@@ -64,6 +100,7 @@ label {
   text-decoration: none;
   display: inline-block;
   font-size: 16px;
+  border-radius: 2px;
 
 }
 
