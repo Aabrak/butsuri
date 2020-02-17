@@ -17,6 +17,37 @@ body  {
   user-select: none;
 }
 
+#mainUI {
+  
+  left: 25px;
+  top: 25px;
+
+  font-family: verdana;
+  /* background-color: purple; /**/
+  
+  width: 1111px;
+
+  position: absolute;
+  z-index: 2;
+
+}
+
+#infoBoxSliderAmount {
+  left: 396px;
+  top: -20px;
+  color: white;
+  position: absolute;
+  z-index: 3;
+}
+
+#infoBoxSliderSize {
+  left: 922px;
+  top: 33px;
+  color: white;
+  position: absolute;
+  z-index: 3;
+}
+
 #c {
     /* background-color: rgba(200, 0, 200, 0.1); /**/
 
@@ -31,13 +62,14 @@ body  {
 
     border: 1px solid cyan; */
 
-    top: -274px;
+    /* top: -290px; /**/
 
     position: relative;
     z-index: 1;
 
     /* background-color: brown */
 }
+
 * {
     margin: 0; padding: 0;
 }
@@ -52,26 +84,15 @@ body, html { height:100%; }
 	font-family: verdana;
 } */
 
-#mainUI {
-  
-  left: 25px;
-  top: 25px;
-
-  font-family: verdana;
-  /* background-color: purple; /**/
-  
-  width: 1132px;
-
-  position: relative;
-  z-index: 2;
-
-}
-
 label {
   color: lightgrey;
   text-shadow: 1px 1px #000000;
 }
 
+.list {
+  background-color: #555;
+  color: white;
+}
 
 .check {
 
@@ -95,7 +116,7 @@ label {
   background-color: #555; /* Green */
   border: none;
   color: white;
-  padding: 15px 32px;
+  padding: 8px 15px;
   text-align: center;
   text-decoration: none;
   display: inline-block;

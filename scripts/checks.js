@@ -32,6 +32,10 @@ document.getElementById('bIncSpeed').onclick = function() {
 	increaseGlobalSpeed();
 };
 
+document.getElementById('bDecSpeed').onclick = function() {
+	decreaseGlobalSpeed();
+};
+
 document.getElementById('bRefresh').onclick = function() {
 
 	pixs = [];
@@ -97,6 +101,24 @@ function checkVortex() {
 
 function checkSplode() {
 	if (bSplode.checked) {
+		return false;
+	}
+	else {
+		return true;
+	}
+}
+
+function checkSelfCollision() {
+	if (bSelfCollision.checked) {
+		return false;
+	}
+	else {
+		return true;
+	}
+}
+
+function checkInputColor() {
+	if (bRgb.checked) {
 		return false;
 	}
 	else {

@@ -21,8 +21,21 @@ var counter = 0;
 var clickSwitch = 0;
 var particleAmount = 3;
 
-var slider = document.getElementById("sSize");
 var sValue = 20;
+
+var sliderAmount = document.getElementById("sAmount");
+var outputAmount = document.getElementById("infoBoxSliderAmount");
+outputAmount.innerHTML = sliderAmount.value; // Display the default slider value
+sliderAmount.oninput = function() {
+  outputAmount.innerHTML = this.value;
+}
+
+var sliderSize = document.getElementById("sizePick");
+var outputSize = document.getElementById("infoBoxSliderSize");
+outputSize.innerHTML = sliderAmount.value; // Display the default slider value
+sliderSize.oninput = function() {
+	outputSize.innerHTML = this.value;
+}
 
 // Slider things
 /* console.log(slider.value);
@@ -60,11 +73,133 @@ slider.oninput = function() {
 let cros1 = new cros(635, 360, 30);
 cros1.drawCros(); */
 
+////
+////	-	Player
+////
+
+class playerPix {
+	
+	constructor(x, y, size, speedX, speedY, mass, color, state) {
+		this.x = x;
+		this.y = y;
+		this.size = size;
+		this.speedY = speedY;
+		this.speedX = speedX;
+		this.mass = size/100;
+		this.color = color;
+		// 1 --> ground | 2 --> air
+		this.state = 2;
+	}
+
+	paint() {
+		ctx.beginPath();
+		ctx.rect(this.x, this.y, this.size, this.size);
+		ctx.fillStyle = this.color;
+		ctx.closePath();
+		ctx.fill();
+	}
+
+	keepInFrame() {
+		// Keep from down
+		if (this.y + this.size > can.height) {
+			this.y = can.height - this.size*1.5;
+			this.state = 1;
+			this.speedY = 0;
+		}
+		// Keep from up
+		else if (this.y < 0) {
+			this.y = 0;
+		}
+		// Keep from left
+		else if (this.x < 0) {
+			this.x = 0;
+		}
+		// Keep from right
+		else if (this.x + this.size > can.width) {
+			this.x = can.width - this.size;
+		}
+		if (this.y < can.height) {
+			this.state = 2;
+		}
+	}
+
+	fall() {
+		if (this.state == 2) {
+			this.y += this.speedY;
+			this.speedY += 0.3;
+		}
+		else if (this.state == 1) {
+			this.speedY = 0;
+		}
+	}
+
+	movement() {
+		document.addEventListener("keydown", e => {
+			// A key
+			if (e.keyCode === 65) {
+				this.x -= 0.5;
+				// console.log("A_?");
+			}
+			// D key
+			if (e.keyCode === 68) {
+				this.x += 0.5;
+				// console.log("D_?");
+			}
+			// W key
+			if (e.keyCode === 87) {
+				this.y -= 0.5;
+				// console.log("W_?");
+			}
+			// S key
+			if (e.keyCode === 83) {
+				this.y += 0.5;
+				// console.log("W_?");
+			}
+
+			// console.log("\n sx: " + this.speedX + "\n sy: " + this.speedY);
+
+		});
+		
+		/* if (this.speedX < 0) {
+			this.speedX += 1;
+		}
+		else if (this.speedX > 0) {
+			this.speedX -= 1;
+		}
+		if (this.speedY < 0) {
+			this.speedY += 1;
+		}
+		else if (this.speedY > 0) {
+			this.speedY -= 1;
+		}
+
+		this.x += this.speedX;
+		this.y += this.speedY; */
+
+	}
+
+	getPosition() {
+		console.log("\nPlayer x: " + this.x + "\nPlayer y: " + this.y);
+	}
+
+}
+
+// Player creation
+var player = new playerPix(200, 200, 50, 0, 0, 10, "#F00", 2);
+
+////
+////	-	Bounding Box object
+////
+
 let crosa = {
 	croX: 530,
 	croY: 250,
 	croSize: 100
 }
+
+////
+////	-	Particle pix class
+////
 
 class pix {
 	
@@ -146,6 +281,11 @@ class pix {
 		this.speedY = this.speedY * 2;
 	}
 
+	decreaseSpeed() {
+		this.speedX = this.speedX / 2;
+		this.speedY = this.speedY / 2;
+	}
+
 	stick() {
 		if (this.y + this.size > can.height || this.y < 0) {
 			if (checkGravity()) {
@@ -190,9 +330,13 @@ class pix {
 			//console.log("fuck");
 		}
 		
-		if (this.x + this.size > can.width) {
+		if (this.x + this.size > can.width && checkGravity()) {
 			this.x = can.width - this.size + 0.1;
 			this.speedX = this.speedX/2;
+		}
+		else if (this.x + this.size > can.width ) {
+			this.x = can.width - this.size + 0.1;
+			this.speedX = this.speedX;
 		}
 	}
 
@@ -211,7 +355,6 @@ class pix {
 	// Use with gravity!
 	reverseSpeeds() {
 		this.speedY = -this.speedY;
-
 		this.speedX = -this.speedX;
 		//this.y -= 10;
 	}
@@ -337,7 +480,43 @@ class pix {
 
 	}
 
+	selfColor() {
+		this.color = colorGen();
+	}
+
 	selfCollision() {
+
+		for ( let i = 0; i < pixs.length; i++ ) {
+			if ( this === pixs[i] ) continue;
+
+			if ( this.x < pixs[i].x + pixs[i].size && this.x + this.size > pixs[i].x && this.y < pixs[i].y + pixs[i].size && this.y + this.size > pixs[i].y ) {
+
+				//console.log("Collision!");
+				this.selfColor();
+
+				if ( this.x < pixs[i].x + pixs[i].size ) {
+					// console.log("Left Collision!");
+					this.speedX = -this.speedX;
+				}
+
+				else if ( this.x + this.size > pixs[i].x ) {
+					// console.log("Right Collision!");
+					this.speedX = -this.speedX;
+				}
+
+				else if ( this.y < pixs[i].y + pixs[i].size ) {
+					// console.log("Up Collision!");
+					this.speedY = -this.speedY;
+				}
+
+				else if ( this.y + this.size > pixs[i].y ) {
+					// console.log("Down Collision!");
+					this.speedY = -this.speedY;
+				}
+
+			}
+
+		}
 
 	}
 
@@ -412,32 +591,77 @@ function colorGen() {
 	let g = Math.floor(Math.random()*10);
 	let b = Math.floor(Math.random()*10);
 
-	let rgb = `#${0}${9}${b}`;
+	let rgb = `#${r}${g}${b}`;
 	rgb.toString();
 
 	return rgb;
 }
 
-// ------------------------------------------- FIX THIS TO USE
-function selfCollider() {
+function inputColorGen() {
+	let inputR = document.getElementById("lRgbR").value;
+	let inputG = document.getElementById("lRgbG").value;
+	let inputB = document.getElementById("lRgbB").value;
 
-	let arrayLength = pixs.length;
+	let r = Math.floor(Math.random()*10);
+	let g = Math.floor(Math.random()*10);
+	let b = Math.floor(Math.random()*10);
 
-	for (let i = 0; i < arrayLength; i++) {
-
-		for (let j = 0; i < arrayLength; j++) {
-
-			//		UP		RIGHT		DOWN		LEFT
-			if ( pixs[i].x == pixs[j].x && pixs[i].x == pixs[j].y ) {
-				pixs[i].reverseSpeeds();
-				pixs[j].reverseSpeeds();
-			}
-
-
-		}
-
+	let rIn = parseInt(inputR);
+	let gIn = parseInt(inputG);
+	let bIn = parseInt(inputB);
+	
+	switch (inputR) {
+		case "RANDOM":
+			console.log("works!");
+			rIn = r;
+			break;
+		case "RANDOM 2":
+			rIn = g;
+			break;
+		case "RANDOM 3":
+			rIn = b;
+			break;
 	}
 	
+	switch (inputG) {
+		case "RANDOM":
+			gIn = r;
+			break;
+		case "RANDOM 2":
+			gIn = g;
+			break;
+		case "RANDOM 3":
+			gIn = b;
+			break;
+	}
+	
+	switch (inputB) {
+		case "RANDOM":
+			bIn = r;
+			break;
+		case "RANDOM 2":
+			bIn = g;
+			break;
+		case "RANDOM 3":
+			bIn = b;
+			break;
+	}
+	
+	let rgb = `#${rIn}${gIn}${bIn}`;
+	rgb.toString();
+
+	return rgb;
+}
+
+function splodeColorGen() {
+	let r = Math.floor(Math.random()*10);
+	let g = Math.floor(Math.random()*10);
+	let b = Math.floor(Math.random()*10);
+
+	let rgb = `#${r}${r}${0}`;
+	rgb.toString();
+
+	return rgb;
 }
 
 function increaseGlobalSpeed() {
@@ -447,6 +671,17 @@ function increaseGlobalSpeed() {
 
 	for (let i = 0; i < arrayLength; i++) {
 		pixs[i].increaseSpeed();
+	}
+
+}
+
+function decreaseGlobalSpeed() {
+	// ADD THE FOR LOOP FOR THE ENTIRE ARRAY OF PARTICLES AND THEN ADD THE METHOD INCREASE GLOBAL SPEED ALSO PROBABLY RENAME THIS ONE
+	
+	let arrayLength = pixs.length;
+
+	for (let i = 0; i < arrayLength; i++) {
+		pixs[i].decreaseSpeed();
 	}
 
 }
@@ -504,11 +739,10 @@ function createPix() {
 			pixs[i].vortex();
 		}
 
-		
-
-		// FIX TO USE
-		// selfCollider();
-		
+		// MY BABY FINALLY WORKS OMG YES THANK YOU
+		if (!checkSelfCollision()) {
+			pixs[i].selfCollision();
+		}
 		//pixs[i].updateSize();
 
 		//pixs[i].selfCollison();
@@ -537,6 +771,15 @@ function createPix() {
 
 	// ctx.rotate(45 * Math.PI / 180); // All fucky, i.e. don't use it
 
+	////
+	////	-	Player
+	////
+
+	// player.paint();
+	// player.keepInFrame();
+	// player.movement();
+	// player.fall();
+
 }
 
 function randomSp() {
@@ -549,8 +792,12 @@ function randomRange(min, max) {
 
 //						x, y, size, speedX, speedY, color, mass					Global Pix Creation
 function globalPix() {
+	let size = document.getElementById("sizePick").value;
 	let clr = document.getElementById("colorPick").value;
-	pixs.push(new pix(rAxis(), rYis(), randomRange(8, 10), randomRange(-10, 10), randomRange(-10, 10), clr, 100));
+	if (!checkInputColor()) {
+		clr = inputColorGen();
+	}
+	pixs.push(new pix(rAxis(), rYis(), randomRange(size/2, size/1.5), randomRange(-10, 10), randomRange(-10, 10), clr, 100));
 }
 
 // Make explosion on click
@@ -558,9 +805,9 @@ function splode() {
 	let clr = document.getElementById("colorPick").value;
 	let smallSize = 2;
 	let bigSize = 2.3;
-	for (let i = 0; i < 30; i++) {
-		pixs.push(new pix(clickPositionX, clickPositionY, randomRange(smallSize, bigSize), randomRange(-5, 5), randomRange(-5, 5), "#ffff00", 100));
-		pixs.push(new pix(clickPositionX, clickPositionY, randomRange(smallSize, bigSize), randomRange(-5, 5), randomRange(-5, 5), "#ffa500", 100));
+	for (let i = 0; i < 15; i++) {
+		pixs.push(new pix(clickPositionX, clickPositionY, randomRange(smallSize, bigSize), randomRange(-5, 5), randomRange(-5, 5), "#FFA500", 100));
+		pixs.push(new pix(clickPositionX, clickPositionY, randomRange(smallSize, bigSize), randomRange(-5, 5), randomRange(-5, 5), splodeColorGen(), 100));
 	}
 }
 
@@ -571,13 +818,16 @@ function canvasPos() {
 
 
 ////
-////	Miscellaneous
+////	Miscellaneous - Particles & Player creation
 ////
 
+// Particle creation
 var pixs = [];
 for (let i = 0; i < particleAmount; i++) {
 	globalPix();
 }
+
+console.log("How many? " + pixs.length);
 
 // Animation loop - IN CLICK LISTENER
 setInterval(createPix, 10);
@@ -628,7 +878,9 @@ document.addEventListener("click", e => {
 	if (!checkSplode()) {
 		splode();
 	}
-	console.log("shit");
+
+	// player.getPosition();
+	// console.log("shit");
 	//clearCanv();
 	//mouX = e.pageX;
 	//mouY = e.pageY;
@@ -670,6 +922,8 @@ document.addEventListener("keydown", e => {
 	}
 
 });
+
+
 
 
 

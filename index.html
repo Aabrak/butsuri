@@ -17,14 +17,65 @@
             <input type="button" name="addBtn" value="ADD ONE" id="bAdd" class="button">
 
             <input type="range" name="amountSlider" value="ADD" id="sAmount" min="1" max="100">
+            <label id="infoBoxSliderAmount">Default</label>
             <input type="button" name="addAmountBtn" value="ADD AMOUNT" id="bAddAmount" class="button">
 
             <input type="button" name="removeAllBtn" value="REMOVE ALL" id="bRemoveAll" class="button">
 
-            <input type="button" name="increaseSpeedBtn" value="INCREASE SPEED" id="bIncSpeed" class="button"><br><br>
+            <input type="button" name="increaseSpeedBtn" value="INCREASE SPEED" id="bIncSpeed" class="button">
+
+            <input type="button" name="deccreaseSpeedBtn" value="DECREASE SPEED" id="bDecSpeed" class="button"><br><br>
 
             <input type="color" id="colorPick" name="colorPick" value="#00CCFF">
-            <label>COLOR</label><br><br>
+            <label>CHOSEN COLOR (default) |</label>
+            
+            <input type="checkbox" name="rgbBtn" id="bRgb" class="check">
+            <label>COLOR GEN (hex):</label>
+
+            <label>R:</label>
+            <select id="lRgbR" class="list">
+                <option value="RANDOM">RAND 1</option>
+                <option value="RANDOM 2">RAND 2</option>
+                <option value="RANDOM 3">RAND 3</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="7">3</option>
+                <option value="8">4</option>
+                <option value="9">5</option>
+                </select>
+
+            <label>G:</label>
+            <select id="lRgbG" class="list">
+                <option value="RANDOM 2">RAND 2</option>
+                <option value="RANDOM">RAND 1</option>
+                <option value="RANDOM 3">RAND 3</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="7">3</option>
+                <option value="8">4</option>
+                <option value="9">5</option>
+            </select>
+
+            <label>B:</label>
+            <select id="lRgbB" class="list">
+                <option value="RANDOM 3">RAND 3</option>
+                <option value="RANDOM">RAND 1</option>
+                <option value="RANDOM 2">RAND 2</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="7">3</option>
+                <option value="8">4</option>
+                <option value="9">5</option>
+            </select>
+
+            <label>| PIX SIZE:</label>
+            <input type="range" name="sizeSlider" value="ADD" id="sizePick" min="1" max="100">
+            <label id="infoBoxSliderSize">Default</label>
+            
+            <br><br>
 
             <input type="checkbox" name="gravityBtn" id="bGravity" class="check">
             <label>GRAVITY (will still apply with freeze)</label><br>
@@ -45,7 +96,10 @@
             <label>ENABLE VORTEX (click position)</label><br>
 
             <input type="checkbox" name="explosionBtn" id="bSplode" class="check">
-            <label>EXPLOSION ON CLICK</label>
+            <label>EXPLOSION ON CLICK</label><br>
+
+            <input type="checkbox" name="selfCollisionBtn" id="bSelfCollision" class="check">
+            <label>SELF COLLISION</label>
 
         </div>
 
@@ -55,6 +109,6 @@
         <!--<input type="range" min="1" max="100" value="5" id="sSize">-->
         
     </body>
-    <script src="scripts/pix_v4.js"></script>
     <script src="scripts/checks.js"></script>
+    <script src="scripts/pix_v4.js"></script>
 </html>
