@@ -504,8 +504,8 @@ class pix {
 					this.speedX = -this.speedX;
 				}
 
-				else if ( this.y < pixs[i].y + pixs[i].size ) {
-					// console.log("Up Collision!");
+				if ( this.y < pixs[i].y + pixs[i].size ) {
+					// console.log("Top Collision!");
 					this.speedY = -this.speedY;
 				}
 
